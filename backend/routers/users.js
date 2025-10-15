@@ -2,16 +2,16 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 
-// Route GET tất cả user
+// Route GET Tất Cả User
 router.get('/users', userController.getUsers);
 
-// Route POST tạo user mới
+// Route POST Tạo User Mới
 router.post('/users', userController.createUser);
 
-// Route PUT cập nhật user
+// Route PUT Cập Nhật User
 router.put('/users/:id', userController.updateUser);
 
-// Route DELETE xóa user
+// Route DELETE Xóa User
 router.delete('/users/:id', userController.deleteUser);
 
 module.exports = router;

@@ -36,7 +36,7 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// PUT /users/:id
+// PUT //users/:id
 exports.updateUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -64,7 +64,7 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-// DELETE /users/:id
+// DELETE //users/:id
 exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
