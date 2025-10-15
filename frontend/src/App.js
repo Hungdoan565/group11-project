@@ -26,6 +26,7 @@ function App() {
             <h1 className="brand-title">User Manager</h1>
             <p className="brand-subtitle">
               Hệ thống quản lý người dùng hiện đại
+              frontend đã sử ở đây 
             </p>
           </div>
           <AddUser 
