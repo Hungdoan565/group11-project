@@ -22,7 +22,7 @@ const UserList = ({ onEditUser }) => {
   };
 
   const handleDelete = async (id, name) => {
-    if (!window.confirm(`Bạn có chắc muốn xóa người dùng "${name}"?`)) {
+    if (!window.confirm(`Bạn có chắc muốn xóa người dùng!!! "${name}"?`)) {
       return;
     }
     try {
@@ -46,7 +46,7 @@ const UserList = ({ onEditUser }) => {
     return (
       <div>
         <div className="user-list-header">
-          <h2 className="user-list-title">Danh Sách Người Dùng</h2>
+          <h2 className="user-list-title">Danh Sách Người Dùng.</h2>
         </div>
         <div className="empty-state">
           <div className="empty-state-icon">⏳</div>

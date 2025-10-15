@@ -17,8 +17,13 @@ const AddUser = ({ onUserAdded, editingUser, onCancelEdit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim()) {
-      alert('⚠️ Vui lòng nhập đầy đủ thông tin');
+    // Validation nâng cao
+    if (!name.trim()) {
+      alert('Name không được để trống');
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      alert('Email không hợp lệ');
       return;
     }
     try {
