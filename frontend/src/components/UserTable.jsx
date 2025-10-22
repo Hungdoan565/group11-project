@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
+import { Pencil, Trash2 } from 'lucide-react';
 import { API_ENDPOINTS } from '../config/api';
 import { showError, showSuccess, showConfirm } from '../utils/toast';
 import TableToolbar from './TableToolbar';
@@ -233,7 +234,7 @@ const UserTable = ({ onEditUser, onUserCountChange }) => {
                       title="Chỉnh sửa người dùng"
                       aria-label={`Chỉnh sửa người dùng ${user.name}`}
                     >
-                      ✏️
+                      <Pencil size={16} />
                     </button>
                     <button
                       className="btn-icon btn-delete"
@@ -241,7 +242,7 @@ const UserTable = ({ onEditUser, onUserCountChange }) => {
                       title="Xóa người dùng"
                       aria-label={`Xóa người dùng ${user.name}`}
                     >
-                      🗑️
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 </td>
@@ -249,6 +250,18 @@ const UserTable = ({ onEditUser, onUserCountChange }) => {
             ))}
           </tbody>
         </table>
+      </div>
+      
+      <div className="table-footer">
+        <div className="footer-info">
+          <span className="footer-text">
+            Tổng số: <strong>{users.length}</strong> người dùng
+          </span>
+          <span className="footer-separator">•</span>
+          <span className="footer-text">
+            Hiển thị: <strong>{paginatedUsers.length}</strong> trên trang này
+          </span>
+        </div>
       </div>
     </div>
   );

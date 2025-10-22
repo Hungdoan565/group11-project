@@ -1,4 +1,5 @@
 import React from 'react';
+import { Search, X } from 'lucide-react';
 import './TableToolbar.css';
 
 const TableToolbar = ({ 
@@ -17,7 +18,7 @@ const TableToolbar = ({
     <div className="table-toolbar">
       <div className="toolbar-left">
         <div className="search-box">
-          <span className="search-icon" aria-hidden="true">🔍</span>
+          <Search className="search-icon" size={18} aria-hidden="true" />
           <input
             type="text"
             className="search-input"
@@ -32,7 +33,7 @@ const TableToolbar = ({
               onClick={() => onSearchChange('')}
               aria-label="Xóa tìm kiếm"
             >
-              ✕
+              <X size={14} />
             </button>
           )}
         </div>
