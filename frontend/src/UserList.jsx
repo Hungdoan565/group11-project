@@ -3,7 +3,7 @@ import axios from 'axios';
 import { API_ENDPOINTS } from './config/api';
 import { showError, showSuccess, showConfirm } from './utils/toast';
 
-const UserList = ({ onEditUser }) => {
+const UserList = ({ onEditUser, onUserCountChange }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -16,6 +16,9 @@ const UserList = ({ onEditUser }) => {
       setLoading(true);
       const res = await axios.get(API_ENDPOINTS.users);
       setUsers(res.data);
+      if (onUserCountChange) {
+        onUserCountChange(res.data.length);
+      }
     } catch (err) {
       console.error('Lỗi khi lấy danh sách người dùng', err);
       showError('Không thể tải danh sách người dùng');
