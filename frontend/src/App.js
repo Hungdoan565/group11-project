@@ -1,24 +1,28 @@
 import './App.css';
 import UserList from './UserList';
 import AddUser from './AddUser';
-import React, { useState } from 'react';
+import ErrorBoundary from './components/ErrorBoundary';
+import React, { useState, useCallback } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const [reload, setReload] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   
-  const handleUserAdded = () => setReload(!reload);
+  const handleUserAdded = useCallback(() => setReload(prev => !prev), []);
   
-  const handleEditUser = (user) => {
+  const handleEditUser = useCallback((user) => {
     setEditingUser(user);
-  };
+  }, []);
   
-  const handleCancelEdit = () => {
+  const handleCancelEdit = useCallback(() => {
     setEditingUser(null);
-  };
+  }, []);
   
   return (
-    <div className="App">
+    <ErrorBoundary>
+      <Toaster />
+      <div className="App">
       <div className="left-panel">
         <div className="form-container">
           <div className="brand-header">
@@ -36,10 +40,11 @@ function App() {
         </div>
       </div>
       
-      <div className="right-panel">
-        <UserList key={reload} onEditUser={handleEditUser} />
+        <div className="right-panel">
+          <UserList key={reload} onEditUser={handleEditUser} />
+        </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 }
 

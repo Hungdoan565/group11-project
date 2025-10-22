@@ -159,6 +159,24 @@ body {
   color: #94a3b8;
 }
 
+.form-group input.input-error {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+.form-group input.input-error:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+.error-message {
+  display: block;
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
 .btn-submit {
   width: 100%;
   padding: 14px;
@@ -198,6 +216,19 @@ body {
 
 .btn-submit:active {
   transform: translateY(0);
+}
+
+.btn-submit:disabled,
+.btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-submit:disabled:hover,
+.btn-cancel:disabled:hover {
+  transform: none;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
 }
 
 /* User List Styles */
@@ -368,6 +399,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.btn-edit:focus-visible,
+.btn-delete:focus-visible,
+.btn-submit:focus-visible,
+.btn-cancel:focus-visible {
+  outline: 3px solid #6366f1;
+  outline-offset: 2px;
 }
 
 .btn-edit {
