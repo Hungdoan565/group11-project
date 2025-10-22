@@ -1,5 +1,5 @@
 import './App.css';
-import UserList from './UserList';
+import UserTable from './components/UserTable';
 import Navbar from './components/Navbar';
 import UserFormModal from './components/UserFormModal';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -47,7 +47,7 @@ function App() {
         
         <main className="main-content">
           <div className="container">
-            <UserList 
+            <UserTable 
               key={reload} 
               onEditUser={handleEditUser}
               onUserCountChange={handleUserCountChange}
