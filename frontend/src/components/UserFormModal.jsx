@@ -1,27 +1,49 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
 import { showError, showSuccess } from '../utils/toast';
 import './UserFormModal.css';
 
+const userSchema = z.object({
+  name: z.string()
+    .min(1, 'Vui lòng nhập họ và tên')
+    .min(3, 'Tên phải có ít nhất 3 ký tự')
+    .max(100, 'Tên không quá 100 ký tự'),
+  email: z.string()
+    .min(1, 'Vui lòng nhập email')
+    .email('Email không hợp lệ')
+    .max(255, 'Email không quá 255 ký tự'),
+});
+
 const UserFormModal = ({ isOpen, onClose, editingUser, onSuccess }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({ name: '', email: '' });
   const modalRef = useRef(null);
   const firstInputRef = useRef(null);
+  
+  const { 
+    register, 
+    handleSubmit, 
+    formState: { errors, isSubmitting }, 
+    reset, 
+    setValue 
+  } = useForm({
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+    },
+  });
 
   useEffect(() => {
     if (editingUser) {
-      setName(editingUser.name);
-      setEmail(editingUser.email);
+      setValue('name', editingUser.name);
+      setValue('email', editingUser.email);
     } else {
-      setName('');
-      setEmail('');
+      reset();
     }
-    setErrors({ name: '', email: '' });
-  }, [editingUser]);
+  }, [editingUser, setValue, reset]);
 
   useEffect(() => {
     if (isOpen && firstInputRef.current) {
@@ -47,54 +69,21 @@ const UserFormModal = ({ isOpen, onClose, editingUser, onSuccess }) => {
     };
   }, [isOpen, onClose]);
 
-  const validateForm = () => {
-    const newErrors = { name: '', email: '' };
-    let isValid = true;
-
-    if (!name.trim()) {
-      newErrors.name = 'Vui lòng nhập họ và tên';
-      isValid = false;
-    }
-
-    if (!email.trim()) {
-      newErrors.email = 'Vui lòng nhập email';
-      isValid = false;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = 'Email không hợp lệ';
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!validateForm()) {
-      showError('Vui lòng kiểm tra lại thông tin');
-      return;
-    }
-
-    setLoading(true);
+  const onSubmit = async (data) => {
     try {
       if (editingUser) {
-        await axios.put(API_ENDPOINTS.user(editingUser.id), { name, email });
+        await axios.put(API_ENDPOINTS.user(editingUser.id), data);
         showSuccess('Cập nhật người dùng thành công');
       } else {
-        await axios.post(API_ENDPOINTS.users, { name, email });
+        await axios.post(API_ENDPOINTS.users, data);
         showSuccess('Thêm người dùng thành công');
       }
-      setName('');
-      setEmail('');
-      setErrors({ name: '', email: '' });
+      reset();
       if (onSuccess) onSuccess();
       onClose();
     } catch (err) {
       console.error('Lỗi khi lưu người dùng', err);
       showError(editingUser ? 'Không thể cập nhật người dùng' : 'Không thể thêm người dùng');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -129,26 +118,25 @@ const UserFormModal = ({ isOpen, onClose, editingUser, onSuccess }) => {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="modal-form">
+        <form onSubmit={handleSubmit(onSubmit)} className="modal-form" noValidate>
           <div className="form-group">
             <label htmlFor="name">Họ và Tên</label>
             <input
-              ref={firstInputRef}
+              {...register('name')}
+              ref={(e) => {
+                register('name').ref(e);
+                firstInputRef.current = e;
+              }}
               id="name"
               type="text"
               placeholder="Nhập họ và tên đầy đủ"
-              value={name}
-              onChange={e => {
-                setName(e.target.value);
-                if (errors.name) setErrors({ ...errors, name: '' });
-              }}
               className={errors.name ? 'input-error' : ''}
               aria-invalid={errors.name ? 'true' : 'false'}
               aria-describedby={errors.name ? 'name-error' : undefined}
             />
             {errors.name && (
               <span className="error-message" id="name-error" role="alert">
-                {errors.name}
+                {errors.name.message}
               </span>
             )}
           </div>
@@ -156,21 +144,17 @@ const UserFormModal = ({ isOpen, onClose, editingUser, onSuccess }) => {
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
+              {...register('email')}
               id="email"
               type="email"
               placeholder="example@email.com"
-              value={email}
-              onChange={e => {
-                setEmail(e.target.value);
-                if (errors.email) setErrors({ ...errors, email: '' });
-              }}
               className={errors.email ? 'input-error' : ''}
               aria-invalid={errors.email ? 'true' : 'false'}
               aria-describedby={errors.email ? 'email-error' : undefined}
             />
             {errors.email && (
               <span className="error-message" id="email-error" role="alert">
-                {errors.email}
+                {errors.email.message}
               </span>
             )}
           </div>
@@ -180,16 +164,16 @@ const UserFormModal = ({ isOpen, onClose, editingUser, onSuccess }) => {
               type="button"
               className="btn-secondary"
               onClick={onClose}
-              disabled={loading}
+              disabled={isSubmitting}
             >
               Hủy
             </button>
             <button
               type="submit"
               className="btn-primary"
-              disabled={loading}
+              disabled={isSubmitting}
             >
-              {loading ? '⏳ Đang xử lý...' : (editingUser ? 'Cập Nhật' : 'Thêm Người Dùng')}
+              {isSubmitting ? '⏳ Đang xử lý...' : (editingUser ? 'Cập Nhật' : 'Thêm Người Dùng')}
             </button>
           </div>
         </form>
