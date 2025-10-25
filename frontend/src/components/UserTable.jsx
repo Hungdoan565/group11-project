@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import axios from 'axios';
 import { Pencil, Trash2 } from 'lucide-react';
-import { API_ENDPOINTS } from '../config/api';
 import { showError, showSuccess, showConfirm } from '../utils/toast';
 import TableToolbar from './TableToolbar';
 import SkeletonRow from './SkeletonRow';
 import './UserTable.css';
+import { getUsers, deleteUser as deleteUserApi } from '../services/userService';
 
 const UserTable = ({ onEditUser, onUserCountChange }) => {
   const [users, setUsers] = useState([]);
@@ -22,14 +21,19 @@ const UserTable = ({ onEditUser, onUserCountChange }) => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(API_ENDPOINTS.users);
-      setUsers(res.data);
+      const data = await getUsers();
+      setUsers(data);
       if (onUserCountChange) {
-        onUserCountChange(res.data.length);
+        onUserCountChange(data.length);
       }
     } catch (err) {
-      console.error('Lỗi khi lấy danh sách người dùng', err);
-      showError('Không thể tải danh sách người dùng');
+      // Nếu chưa đăng nhập (401), không hiện toast lỗi để UI cũ vẫn hiển thị "Chưa có người dùng"
+      if (err?.response?.status !== 401) {
+        console.error('Lỗi khi lấy danh sách người dùng', err);
+        showError('Không thể tải danh sách người dùng');
+      }
+      setUsers([]);
+      if (onUserCountChange) onUserCountChange(0);
     } finally {
       setLoading(false);
     }
@@ -40,7 +44,7 @@ const UserTable = ({ onEditUser, onUserCountChange }) => {
     if (!confirmed) return;
 
     try {
-      await axios.delete(API_ENDPOINTS.user(id));
+      await deleteUserApi(id);
       const newUsers = users.filter(user => user.id !== id);
       setUsers(newUsers);
       if (onUserCountChange) {

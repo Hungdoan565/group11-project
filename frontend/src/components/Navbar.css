@@ -49,10 +49,7 @@
 .navbar-title {
   font-size: 1.25rem;
   font-weight: 700;
-  background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-secondary-500) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-secondary-600);
   letter-spacing: -0.5px;
   line-height: 1.2;
 }
@@ -74,12 +71,12 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-4);
-  background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-secondary-500) 100%);
+  background: var(--color-primary-500);
   color: #fff;
   border-radius: var(--radius-full);
   font-size: 0.875rem;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
 }
 
 .user-count-icon {
@@ -97,7 +94,7 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-5);
-  background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-secondary-500) 100%);
+  background: var(--color-primary-500);
   color: #fff;
   border: none;
   border-radius: var(--radius-md);
@@ -105,12 +102,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: all var(--duration-base) var(--ease-out);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
 }
 
 .btn-primary:hover {
+  background: var(--color-primary-600);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.35);
 }
 
 .btn-primary:active {

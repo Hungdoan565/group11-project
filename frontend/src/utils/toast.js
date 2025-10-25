@@ -89,7 +89,7 @@ export const showLoading = (message = 'Đang xử lý...') => {
   return toast.loading(message, {
     position: 'top-right',
     style: {
-      background: '#6366f1',
+      background: '#22c55e',
       color: '#fff',
       fontWeight: '600',
       borderRadius: '10px',

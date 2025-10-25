@@ -53,14 +53,14 @@ class ErrorBoundary extends React.Component {
               onClick={() => window.location.reload()}
               style={{
                 padding: '12px 24px',
-                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+background: 'var(--color-primary-500)',
                 color: '#fff',
                 border: 'none',
                 borderRadius: '10px',
                 fontSize: '1rem',
                 fontWeight: '600',
                 cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(99, 102, 241, 0.25)',
+boxShadow: '0 4px 12px rgba(34, 197, 94, 0.25)',
               }}
             >
               Tải lại trang

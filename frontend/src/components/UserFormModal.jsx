@@ -2,10 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import axios from 'axios';
-import { API_ENDPOINTS } from '../config/api';
 import { showError, showSuccess } from '../utils/toast';
 import './UserFormModal.css';
+import { createUser, updateUser } from '../services/userService';
 
 const userSchema = z.object({
   name: z.string()
@@ -72,10 +71,10 @@ const UserFormModal = ({ isOpen, onClose, editingUser, onSuccess }) => {
   const onSubmit = async (data) => {
     try {
       if (editingUser) {
-        await axios.put(API_ENDPOINTS.user(editingUser.id), data);
+        await updateUser(editingUser.id, data);
         showSuccess('Cập nhật người dùng thành công');
       } else {
-        await axios.post(API_ENDPOINTS.users, data);
+        await createUser(data);
         showSuccess('Thêm người dùng thành công');
       }
       reset();

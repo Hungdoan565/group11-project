@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Users, Plus, Zap } from 'lucide-react';
 import './Navbar.css';
 
@@ -23,6 +24,13 @@ const Navbar = ({ userCount, onAddClick }) => {
               <strong>{userCount}</strong> người dùng
             </span>
           </div>
+          
+          <Link className="btn-secondary" to="/login" aria-label="Đăng nhập">
+            Đăng nhập
+          </Link>
+          <Link className="btn-primary" to="/signup" aria-label="Đăng ký">
+            Đăng ký
+          </Link>
           
           <button 
             className="btn-primary"

@@ -1,66 +1,42 @@
 import './App.css';
-import UserTable from './components/UserTable';
-import Navbar from './components/Navbar';
-import UserFormModal from './components/UserFormModal';
 import ErrorBoundary from './components/ErrorBoundary';
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { Toaster } from 'react-hot-toast';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import UsersPage from './pages/UsersPage';
+import LoginPage from './pages/Login';
+import SignupPage from './pages/Signup';
+import ProfilePage from './pages/Profile';
+import ForgotPasswordPage from './pages/ForgotPassword';
+import ResetPasswordPage from './pages/ResetPassword';
+import ProtectedRoute from './components/ProtectedRoute';
+import { useAuth } from './context/AuthContext';
 
 function App() {
-  const [reload, setReload] = useState(false);
-  const [editingUser, setEditingUser] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userCount, setUserCount] = useState(0);
-  
-  const handleUserAdded = useCallback(() => {
-    setReload(prev => !prev);
-    setIsModalOpen(false);
-  }, []);
-  
-  const handleEditUser = useCallback((user) => {
-    setEditingUser(user);
-    setIsModalOpen(true);
-  }, []);
-  
-  const handleCloseModal = useCallback(() => {
-    setIsModalOpen(false);
-    setEditingUser(null);
-  }, []);
-  
-  const handleOpenModal = useCallback(() => {
-    setEditingUser(null);
-    setIsModalOpen(true);
-  }, []);
-  
-  const handleUserCountChange = useCallback((count) => {
-    setUserCount(count);
-  }, []);
-  
+  const { user } = useAuth();
+
   return (
     <ErrorBoundary>
       <Toaster />
       <div className="App">
-        <Navbar 
-          userCount={userCount} 
-          onAddClick={handleOpenModal}
-        />
-        
-        <main className="main-content">
-          <div className="container">
-            <UserTable 
-              key={reload} 
-              onEditUser={handleEditUser}
-              onUserCountChange={handleUserCountChange}
-            />
-          </div>
-        </main>
-        
-        <UserFormModal
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          editingUser={editingUser}
-          onSuccess={handleUserAdded}
-        />
+        <Routes>
+          <Route path="/" element={<UsersPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/users" element={
+            <ProtectedRoute requireAdmin>
+              <UsersPage />
+            </ProtectedRoute>
+          } />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
       </div>
     </ErrorBoundary>
   );
