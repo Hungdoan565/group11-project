@@ -152,3 +152,28 @@ Nhóm 11
 - Nguyễn Trọng Nghĩa - 220361
 - Trần Thanh Huy - 226780
 
+---
+
+## Buổi 5 – Authentication & User Management (mới)
+
+### Backend .env (ví dụ)
+Xem `backend/.env.example`, cần `JWT_SECRET`, `JWT_EXPIRES_IN`, Cloudinary.
+
+### API mới
+- POST `/api/auth/signup` – đăng ký (bcrypt + JWT)
+- POST `/api/auth/login` – đăng nhập (JWT)
+- POST `/api/auth/logout` – client xoá token
+- POST `/api/auth/forgot-password` – trả về `resetToken` (demo)
+- POST `/api/auth/reset-password` – đặt mật khẩu mới bằng `resetToken`
+- GET `/api/profile` – xem thông tin cá nhân (Bearer JWT)
+- PUT `/api/profile` – cập nhật tên/avatar/mật khẩu
+- POST `/api/upload/avatar` – upload avatar (multipart/form-data `avatar`)
+- [Admin] GET/POST/PUT/DELETE `/api/users` – quản lý user (RBAC)
+
+Lưu ý: Tài khoản đầu tiên đăng ký sẽ là `admin`.
+
+### Frontend route mới
+- `/login`, `/signup`, `/forgot-password`, `/reset-password`
+- `/profile` (bảo vệ)
+- `/admin/users` (chỉ Admin)
+
