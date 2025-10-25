@@ -1,17 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const { protect, permit, allowSelfOrAdmin } = require('../middlewares/auth');
 
-// Route GET tất cả user
-router.get('/users', userController.getUsers);
+// All routes below require authentication
+router.use(protect);
 
-// Route POST tạo user mới
-router.post('/users', userController.createUser);
+// Admin: GET all users
+router.get('/users', permit('admin'), userController.getUsers);
 
-// Route PUT cập nhật user
-router.put('/users/:id', userController.updateUser);
+// Admin: create new user
+router.post('/users', permit('admin'), userController.createUser);
 
-// Route DELETE xóa user
-router.delete('/users/:id', userController.deleteUser);
+// Admin: update user
+router.put('/users/:id', permit('admin'), userController.updateUser);
+
+// Admin or self: delete user
+router.delete('/users/:id', allowSelfOrAdmin, userController.deleteUser);
 
 module.exports = router;
