@@ -255,3 +255,25 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Accessibility: Skip to main content link */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  z-index: var(--z-tooltip);
+  padding: var(--space-3) var(--space-6);
+  background: var(--color-primary-600);
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 var(--radius-md) 0;
+  box-shadow: var(--shadow-lg);
+  transition: top var(--duration-base) var(--ease-out);
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid var(--color-primary-500);
+  outline-offset: 2px;
+}

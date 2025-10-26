@@ -6,6 +6,9 @@ const { protect, permit, allowSelfOrAdmin } = require('../middlewares/auth');
 // All routes below require authentication
 router.use(protect);
 
+// Get current user info (any authenticated user)
+router.get('/users/me', userController.getCurrentUser);
+
 // Admin: GET all users
 router.get('/users', permit('admin'), userController.getUsers);
 

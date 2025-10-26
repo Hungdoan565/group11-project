@@ -15,6 +15,21 @@
   background: linear-gradient(135deg, var(--color-primary-500) 0%, var(--color-secondary-500) 100%);
   cursor: pointer;
   overflow: hidden;
+  transition: transform 0.3s var(--ease-out);
+}
+
+.profile-header__cover-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.profile-header__cover:hover {
+  transform: scale(1.02);
 }
 
 .profile-header__cover-gradient {
@@ -24,38 +39,43 @@
   right: 0;
   bottom: 0;
   background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
+  transition: opacity 0.3s var(--ease-out);
+}
+
+.profile-header__cover:hover .profile-header__cover-gradient {
+  opacity: 0.7;
 }
 
 .profile-header__cover-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  background: rgba(0, 0, 0, 0.5);
+  padding: var(--space-4) var(--space-6);
+  background: var(--color-primary-500);
   color: var(--color-text-inverse);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  animation: profile-header-overlay-fade-in 0.2s var(--ease-out);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+  pointer-events: none;
 }
 
-@keyframes profile-header-overlay-fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.profile-header__cover:hover .profile-header__cover-overlay {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .profile-header__cover-overlay svg {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
 }
 
 /* Profile info */
@@ -77,26 +97,44 @@
   border-radius: var(--radius-full);
   background: var(--color-background);
   padding: var(--space-1);
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+}
+
+.profile-header__avatar-container:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.profile-header__avatar-container:active {
+  transform: scale(0.98);
 }
 
 .profile-header__avatar-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
+  width: 32px;
+  height: 32px;
+  background: var(--color-primary-500);
   border-radius: var(--radius-full);
   color: var(--color-text-inverse);
-  animation: profile-header-overlay-fade-in 0.2s var(--ease-out);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transition: opacity 0.2s var(--ease-out);
+  pointer-events: none;
+}
+
+.profile-header__avatar-container:hover .profile-header__avatar-overlay {
+  opacity: 1;
 }
 
 .profile-header__avatar-overlay svg {
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
 }
 
 /* Details */

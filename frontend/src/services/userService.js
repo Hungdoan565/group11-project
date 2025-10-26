@@ -1,22 +1,21 @@
-import axios from 'axios';
-import { API_ENDPOINTS } from '../config/api';
+import { apiClient } from '../config/api';
 
 export const getUsers = async () => {
-  const res = await axios.get(API_ENDPOINTS.users);
+  const res = await apiClient.get('/users');
   return res.data;
 };
 
 export const createUser = async (payload) => {
-  const res = await axios.post(API_ENDPOINTS.users, payload);
+  const res = await apiClient.post('/users', payload);
   return res.data;
 };
 
 export const updateUser = async (id, payload) => {
-  const res = await axios.put(API_ENDPOINTS.user(id), payload);
+  const res = await apiClient.put(`/users/${id}`, payload);
   return res.data;
 };
 
 export const deleteUser = async (id) => {
-  const res = await axios.delete(API_ENDPOINTS.user(id));
+  const res = await apiClient.delete(`/users/${id}`);
   return res.data;
 };

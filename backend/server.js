@@ -9,7 +9,13 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
+const authRoutes = require("./routers/auth.js");
+const profileRoutes = require("./routers/profile.js");
+const uploadRoutes = require("./routers/upload.js");
 const userRoutes = require("./routers/users.js");
+app.use("/api/auth", authRoutes);
+app.use("/api/profile", profileRoutes);
+app.use("/api/upload", uploadRoutes);
 app.use("/api", userRoutes);
 
 // DB Connection

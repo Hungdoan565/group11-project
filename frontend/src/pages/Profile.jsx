@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { showError, showSuccess } from '../utils/toast';
 import { useAuth } from '../context/AuthContext';
-import { updateProfile, uploadAvatar } from '../services/authService';
+import { updateProfile, uploadAvatar, uploadCover } from '../services/authService';
 import ProfileLayout from '../components/profile/ProfileLayout';
 import ProfileHeader from '../components/profile/ProfileHeader';
 import AvatarUploadModal from '../components/profile/AvatarUploadModal';
@@ -36,6 +36,7 @@ const ProfilePage = () => {
   const { user, setUser } = useAuth();
   const [uploading, setUploading] = useState(false);
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+  const [isCoverModalOpen, setIsCoverModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('personal');
 
   const personalForm = useForm({
@@ -80,6 +81,21 @@ const ProfilePage = () => {
       setIsAvatarModalOpen(false);
     } catch (err) {
       showError('Upload avatar thất bại');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleCoverUpload = async (file) => {
+    try {
+      setUploading(true);
+      const { url } = await uploadCover(file);
+      const updated = await updateProfile({ coverPhoto: url });
+      setUser(updated);
+      showSuccess('Cập nhật ảnh bìa thành công');
+      setIsCoverModalOpen(false);
+    } catch (err) {
+      showError('Upload ảnh bìa thất bại');
     } finally {
       setUploading(false);
     }
@@ -240,7 +256,7 @@ const ProfilePage = () => {
         <ProfileHeader
           user={user}
           onAvatarClick={() => setIsAvatarModalOpen(true)}
-          onCoverClick={() => {}}
+          onCoverClick={() => setIsCoverModalOpen(true)}
         />
 
         <Tabs
@@ -251,10 +267,19 @@ const ProfilePage = () => {
         />
       </div>
 
+      {/* Avatar Upload Modal */}
       <AvatarUploadModal
         isOpen={isAvatarModalOpen}
         onClose={() => setIsAvatarModalOpen(false)}
         onUpload={handleAvatarUpload}
+        uploading={uploading}
+      />
+
+      {/* Cover Photo Upload Modal */}
+      <AvatarUploadModal
+        isOpen={isCoverModalOpen}
+        onClose={() => setIsCoverModalOpen(false)}
+        onUpload={handleCoverUpload}
         uploading={uploading}
       />
     </ProfileLayout>

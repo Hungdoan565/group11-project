@@ -9,6 +9,11 @@ exports.getUsers = async (req, res) => {
       id: u._id.toString(),
       name: u.name,
       email: u.email,
+      role: u.role,
+      avatar: u.avatar || "",
+      coverPhoto: u.coverPhoto || "",
+      createdAt: u.createdAt,
+      updatedAt: u.updatedAt,
     }));
     res.json(normalized);
   } catch (err) {
@@ -21,14 +26,23 @@ exports.getUsers = async (req, res) => {
 // POST /users
 exports.createUser = async (req, res) => {
   try {
-    const { name, email } = req.body;
-    if (!name || !email) {
-      return res.status(400).json({ message: "Name and Email are required" });
+    const { name, email, password, role } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "Name, Email, and Password are required" });
     }
-    const user = await User.create({ name, email });
+    const user = await User.create({ name, email, password, role: role || 'user' });
     res
       .status(201)
-      .json({ id: user._id.toString(), name: user.name, email: user.email });
+      .json({ 
+        id: user._id.toString(), 
+        name: user.name, 
+        email: user.email,
+        role: user.role,
+        avatar: user.avatar || "",
+        coverPhoto: user.coverPhoto || "",
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      });
   } catch (err) {
     res
       .status(500)
@@ -40,15 +54,18 @@ exports.createUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email } = req.body;
+    const { name, email, role, avatar, coverPhoto } = req.body;
     
-    if (!name || !email) {
-      return res.status(400).json({ message: "Name and Email are required" });
-    }
+    const updateData = {};
+    if (name !== undefined) updateData.name = name;
+    if (email !== undefined) updateData.email = email;
+    if (role !== undefined) updateData.role = role;
+    if (avatar !== undefined) updateData.avatar = avatar;
+    if (coverPhoto !== undefined) updateData.coverPhoto = coverPhoto;
     
     const user = await User.findByIdAndUpdate(
       id,
-      { name, email },
+      updateData,
       { new: true, runValidators: true }
     );
     
@@ -56,7 +73,16 @@ exports.updateUser = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     
-    res.json({ id: user._id.toString(), name: user.name, email: user.email });
+    res.json({ 
+      id: user._id.toString(), 
+      name: user.name, 
+      email: user.email,
+      role: user.role,
+      avatar: user.avatar || "",
+      coverPhoto: user.coverPhoto || "",
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    });
   } catch (err) {
     res
       .status(500)
@@ -79,5 +105,28 @@ exports.deleteUser = async (req, res) => {
     res
       .status(500)
       .json({ message: "Failed to delete user", error: err.message });
+  }
+};
+
+// GET /users/me - Get current user info with role
+exports.getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    res.json({
+      id: user._id.toString(),
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      avatar: user.avatar || "",
+      coverPhoto: user.coverPhoto || "",
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch user info", error: err.message });
   }
 };

@@ -6,7 +6,7 @@ import SkeletonRow from './SkeletonRow';
 import './UserTable.css';
 import { getUsers, deleteUser as deleteUserApi } from '../services/userService';
 
-const UserTable = ({ onEditUser, onUserCountChange }) => {
+const UserTable = ({ onEditUser, onUserCountChange, onUsersChange }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -26,6 +26,9 @@ const UserTable = ({ onEditUser, onUserCountChange }) => {
       if (onUserCountChange) {
         onUserCountChange(data.length);
       }
+      if (onUsersChange) {
+        onUsersChange(data);
+      }
     } catch (err) {
       // Nếu chưa đăng nhập (401), không hiện toast lỗi để UI cũ vẫn hiển thị "Chưa có người dùng"
       if (err?.response?.status !== 401) {
@@ -34,6 +37,7 @@ const UserTable = ({ onEditUser, onUserCountChange }) => {
       }
       setUsers([]);
       if (onUserCountChange) onUserCountChange(0);
+      if (onUsersChange) onUsersChange([]);
     } finally {
       setLoading(false);
     }
@@ -49,6 +53,9 @@ const UserTable = ({ onEditUser, onUserCountChange }) => {
       setUsers(newUsers);
       if (onUserCountChange) {
         onUserCountChange(newUsers.length);
+      }
+      if (onUsersChange) {
+        onUsersChange(newUsers);
       }
       showSuccess(`Đã xóa người dùng "${name}"`);
     } catch (err) {

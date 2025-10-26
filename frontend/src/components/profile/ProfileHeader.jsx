@@ -37,6 +37,13 @@ const ProfileHeader = ({
         tabIndex={0}
         aria-label="Thay đổi ảnh bìa"
       >
+        {user?.coverPhoto && (
+          <img 
+            src={user.coverPhoto} 
+            alt="Cover" 
+            className="profile-header__cover-image"
+          />
+        )}
         <div className="profile-header__cover-gradient" />
         {isCoverHovered && (
           <div className="profile-header__cover-overlay">

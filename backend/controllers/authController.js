@@ -32,7 +32,16 @@ exports.signup = async (req, res) => {
     const token = signToken(user);
     return res.status(201).json({
       token,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role, avatar: user.avatar },
+      user: { 
+        id: user.id, 
+        name: user.name, 
+        email: user.email, 
+        role: user.role, 
+        avatar: user.avatar,
+        coverPhoto: user.coverPhoto,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      },
     });
   } catch (err) {
     return res.status(500).json({ message: 'Đăng ký thất bại', error: err.message });
@@ -56,7 +65,16 @@ exports.login = async (req, res) => {
     const token = signToken(user);
     return res.json({
       token,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role, avatar: user.avatar },
+      user: { 
+        id: user.id, 
+        name: user.name, 
+        email: user.email, 
+        role: user.role, 
+        avatar: user.avatar,
+        coverPhoto: user.coverPhoto,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      },
     });
   } catch (err) {
     return res.status(500).json({ message: 'Đăng nhập thất bại', error: err.message });
