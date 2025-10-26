@@ -5,7 +5,36 @@ const mongoose = require("mongoose");
 require("dotenv").config({ path: __dirname + "/.env" });
 
 // Middlewares
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:3001',
+  'http://localhost:3000',
+  'https://*.vercel.app',
+  process.env.FRONTEND_URL // Add your Vercel URL in env
+].filter(Boolean);
+
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin is allowed
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (allowedOrigin.includes('*')) {
+        // Handle wildcard domains
+        const pattern = new RegExp(allowedOrigin.replace('*', '.*'));
+        return pattern.test(origin);
+      }
+      return origin === allowedOrigin;
+    });
+    
+    if (isAllowed || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 // Routes
