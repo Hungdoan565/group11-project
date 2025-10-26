@@ -1,45 +1,44 @@
 import './App.css';
-import UserList from './UserList';
-import AddUser from './AddUser';
-import React, { useState } from 'react';
+import ErrorBoundary from './components/ErrorBoundary';
+import React from 'react';
+import { Toaster } from 'react-hot-toast';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import UsersPage from './pages/UsersPage';
+import LoginPage from './pages/Login';
+import SignupPage from './pages/Signup';
+import ProfilePage from './pages/Profile';
+import ForgotPasswordPage from './pages/ForgotPassword';
+import ResetPasswordPage from './pages/ResetPassword';
+import ProtectedRoute from './components/ProtectedRoute';
+import { useAuth } from './context/AuthContext';
 
 function App() {
-  const [reload, setReload] = useState(false);
-  const [editingUser, setEditingUser] = useState(null);
-  
-  const handleUserAdded = () => setReload(!reload);
-  
-  const handleEditUser = (user) => {
-    setEditingUser(user);
-  };
-  
-  const handleCancelEdit = () => {
-    setEditingUser(null);
-  };
-  
+  const { user } = useAuth();
+
   return (
-    <div className="App">
-      <div className="left-panel">
-        <div className="form-container">
-          <div className="brand-header">
-            <div className="brand-logo">⚡</div>
-            <h1 className="brand-title">User Manager</h1>
-            <p className="brand-subtitle">
-              Hệ thống quản lý người dùng hiện đại
-            </p>
-          </div>
-          <AddUser 
-            onUserAdded={handleUserAdded} 
-            editingUser={editingUser}
-            onCancelEdit={handleCancelEdit}
-          />
-        </div>
+    <ErrorBoundary>
+      <Toaster />
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<UsersPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/users" element={
+            <ProtectedRoute requireAdmin>
+              <UsersPage />
+            </ProtectedRoute>
+          } />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
       </div>
-      
-      <div className="right-panel">
-        <UserList key={reload} onEditUser={handleEditUser} />
-      </div>
-    </div>
+    </ErrorBoundary>
   );
 }
 

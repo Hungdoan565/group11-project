@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { API_ENDPOINTS } from './config/api';
+import { showError, showSuccess, showConfirm } from './utils/toast';
 
-const UserList = ({ onEditUser }) => {
+const UserList = ({ onEditUser, onUserCountChange }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -12,24 +14,30 @@ const UserList = ({ onEditUser }) => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get('http://localhost:3000/api/users');
+      const res = await axios.get(API_ENDPOINTS.users);
       setUsers(res.data);
+      if (onUserCountChange) {
+        onUserCountChange(res.data.length);
+      }
     } catch (err) {
       console.error('Lỗi khi lấy danh sách người dùng', err);
+      showError('Không thể tải danh sách người dùng');
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id, name) => {
-    if (!window.confirm(`Bạn có chắc muốn xóa người dùng "${name}"?`)) {
-      return;
-    }
+    const confirmed = await showConfirm(`Bạn có chắc muốn xóa người dùng "${name}"?`);
+    if (!confirmed) return;
+
     try {
-      await axios.delete(`http://localhost:3000/api/users/${id}`);
+      await axios.delete(API_ENDPOINTS.user(id));
       setUsers(users.filter(user => user.id !== id));
+      showSuccess(`Đã xóa người dùng "${name}"`);
     } catch (err) {
-      alert('❌ Lỗi khi xóa người dùng');
+      console.error('Lỗi khi xóa người dùng', err);
+      showError('Không thể xóa người dùng');
     }
   };
 
@@ -80,14 +88,16 @@ const UserList = ({ onEditUser }) => {
                 <button 
                   className="btn-edit"
                   onClick={() => onEditUser(user)}
-                  title="Chỉnh sửa"
+                  title="Chỉnh sửa người dùng"
+                  aria-label={`Chỉnh sửa người dùng ${user.name}`}
                 >
                   ✏️
                 </button>
                 <button 
                   className="btn-delete"
                   onClick={() => handleDelete(user.id, user.name)}
-                  title="Xóa"
+                  title="Xóa người dùng"
+                  aria-label={`Xóa người dùng ${user.name}`}
                 >
                   🗑️
                 </button>
